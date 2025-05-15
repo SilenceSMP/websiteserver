@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SilenceSMP - Server Minecraft Indonesia</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Minecraft', Arial, sans-serif;
+        }
+
+        @font-face {
+            font-family: 'Minecraft';
+            src: url('https://fonts.cdnfonts.com/css/minecraft-4') format('woff2');
+        }
+
+        body {
+            color: #fff;
+            overflow-x: hidden;
+            background-color: #0a0a12;
+        }
+
+        /* Particle Background */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+        }
+
+        /* Background Changer Controls */
+        .bg-controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+        }
+
+        .bg-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .bg-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(74, 74, 255, 0.8);
+        }
+
+        /* Header Styles */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            background-color: rgba(10, 10, 18, 0.8);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
+            position: relative;
+            z-index: 10;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .logo img {
+            height: 80px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo img:hover {
+            transform: scale(1.1);
+        }
+
+        .server-info {
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 2px solid #4a4aff;
+            box-shadow: 0 0 15px rgba(74, 74, 255, 0.5);
+        }
+
+        .server-info p {
+            margin: 5px 0;
+            font-size: 1.1rem;
+        }
+
+        /* Navigation Styles */
+        nav {
+            background-color: rgba(20, 20, 40, 0.9);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.4);
+            animation: slideInDown 0.8s ease-out;
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            gap: 30px;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.1rem;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            position: relative;
+            display: inline-block;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: #4a4aff;
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #4a4aff;
+            background-color: rgba(74, 74, 255, 0.1);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Section Styles */
+        section {
+            min-height: 100vh;
+            padding: 80px 10%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+            transition: background-image 0.5s ease;
+        }
+
+        section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(74, 74, 255, 0.1) 0%, rgba(10, 10, 18, 0.8) 70%);
+            z-index: -1;
+        }
+
+        section h1, section h2 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(74, 74, 255, 0.7);
+            animation: fadeInUp 1s ease-out;
+        }
+
+        section p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+            animation: fadeInUp 1s ease-out 0.2s forwards;
+            opacity: 0;
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(45deg, #4a4aff, #6a6aff);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(74, 74, 255, 0.4);
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 1s ease-out 0.4s forwards;
+            opacity: 0;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(74, 74, 255, 0.6);
+            background: linear-gradient(45deg, #6a6aff, #4a4aff);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .btn:hover::after {
+            transform: translateX(100%);
+        }
+
+        /* Home Section */
+        #home {
+            background-image: url('');
+        }
+
+        /* Discord Section */
+        #discord {
+            background-image: url('https://imgur.com/A7EIeJm.png');
+        }
+
+        /* Store Section */
+        #store {
+            background-image: url('https://imgur.com/4DHNThF.png');
+        }
+
+        /* WhatsApp Section */
+        #whatsapp {
+            background-image: url('https://imgur.com/MgFB7vI.png');
+        }
+
+        /* Footer Styles */
+        footer {
+            background-color: rgba(10, 10, 18, 0.9);
+            padding: 20px 0;
+            text-align: center;
+            font-size: 1rem;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInDown {
+            from {
+                transform: translateY(-100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        /* Floating Animation */
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            nav ul {
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+
+            section h1, section h2 {
+                font-size: 2rem;
+            }
+
+            section p {
+                font-size: 1rem;
+            }
+
+            .bg-controls {
+                bottom: 10px;
+                right: 10px;
+            }
+            
+            .bg-btn {
+                width: 30px;
+                height: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Particle Background -->
+    <div id="particles-js"></div>
+
+    <!-- Background Changer Controls -->
+    <div class="bg-controls">
+        <div class="bg-btn" style="background-image: url('https://imgur.com/5Kr67Qb.png')" onclick="changeBackground('home', this)"></div>
+        <div class="bg-btn" style="background-image: url('https://i.imgur.com/8Q3QZ9a.jpg')" onclick="changeBackground('discord', this)"></div>
+        <div class="bg-btn" style="background-image: url('https://i.imgur.com/9Q3QZ9a.jpg')" onclick="changeBackground('store', this)"></div>
+        <div class="bg-btn" style="background-image: url('https://i.imgur.com/7Q3QZ9a.jpg')" onclick="changeBackground('whatsapp', this)"></div>
+    </div>
+
+    <!-- Header Section with Logo and IP Info -->
+    <header>
+        <div class="logo floating">
+            <img src="https://imgur.com/dWD5KGQ.png" alt="SilenceSMP Logo" id="main-logo">
+        </div>
+        <div class="server-info">
+            <p><i class="fas fa-server"></i> IP Server: <span id="server-ip">silencesmp.styes.net</span></p>
+            <p><i class="fas fa-plug"></i> Port: <span id="server-port">19131</span></p>
+        </div>
+    </header>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <ul>
+            <li><a href="#home"><i class="fas fa-home"></i> Beranda</a></li>
+            <li><a href="#discord"><i class="fab fa-discord"></i> Discord</a></li>
+            <li><a href="#store"><i class="fas fa-shopping-cart"></i> Toko</a></li>
+            <li><a href="#whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Section -->
+    <section id="home">
+        <h1>Selamat datang di SilenceSMP</h1>
+        <p>Server Minecraft terbaik dengan fitur econony dengan petualangan seru kamu pada hari ini.</p>
+        <a href="https://chat.whatsapp.com/GUUHKDG4o7SB9EpJPfR09m" class="btn"><i class="fas fa-users"></i> Gabung Sekarang</a>
+    </section>
+
+    <!-- Discord Section -->
+    <section id="discord">
+        <h2>Gabung dengan Kami di Discord</h2>
+        <p>Temukan teman baru, dapatkan informasi terbaru tentang server, dan ikuti event seru bersama komunitas kami di Discord!</p>
+        <a href="https://discord.gg/KCHaaaj3D9" target="_blank" class="btn"><i class="fab fa-discord"></i> Gabung di Discord</a>
+    </section>
+
+    <!-- Store Section -->
+    <section id="store">
+        <h2>TopUp Server</h2>
+        <p>Kunjungi toko kami untuk berbagai item eksklusif, rank, dan keperluan dalam game lainnya yang akan membuat kalian menjadi yang terkuat</p>
+        <a href="https://your-store-link.com" target="_blank" class="btn"><i class="fas fa-gem"></i> Kunjungi Toko</a>
+    </section>
+
+    <!-- WhatsApp Section -->
+    <section id="whatsapp">
+        <h2>Join Grub whatsaap</h2>
+        <p>Ikuti Grub Whatsapp Server untuk mengobrol dengan member lain disana:D</p>
+        <a href="https://chat.whatsapp.com/GUUHKDG4o7SB9EpJPfR09m" target="_blank" class="btn"><i class="fab fa-whatsapp"></i> Chat di WhatsApp</a>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2023 SilenceSMP - Semua hak cipta dilindungi</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // Initialize particles.js
+        document.addEventListener('DOMContentLoaded', function() {
+            particlesJS('particles-js', {
+                "particles": {
+                    "number": {
+                        "value": 80,
+                        "density": {
+                            "enable": true,
+                            "value_area": 800
+                        }
+                    },
+                    "color": {
+                        "value": "#4a4aff"
+                    },
+                    "shape": {
+                        "type": "circle",
+                        "stroke": {
+                            "width": 0,
+                            "color": "#000000"
+                        },
+                        "polygon": {
+                            "nb_sides": 5
+                        }
+                    },
+                    "opacity": {
+                        "value": 0.5,
+                        "random": false,
+                        "anim": {
+                            "enable": false,
+                            "speed": 1,
+                            "opacity_min": 0.1,
+                            "sync": false
+                        }
+                    },
+                    "size": {
+                        "value": 3,
+                        "random": true,
+                        "anim": {
+                            "enable": false,
+                            "speed": 40,
+                            "size_min": 0.1,
+                            "sync": false
+                        }
+                    },
+                    "line_linked": {
+                        "enable": true,
+                        "distance": 150,
+                        "color": "#4a4aff",
+                        "opacity": 0.4,
+                        "width": 1
+                    },
+                    "move": {
+                        "enable": true,
+                        "speed": 2,
+                        "direction": "none",
+                        "random": false,
+                        "straight": false,
+                        "out_mode": "out",
+                        "bounce": false,
+                        "attract": {
+                            "enable": false,
+                            "rotateX": 600,
+                            "rotateY": 1200
+                        }
+                    }
+                },
+                "interactivity": {
+                    "detect_on": "canvas",
+                    "events": {
+                        "onhover": {
+                            "enable": true,
+                            "mode": "grab"
+                        },
+                        "onclick": {
+                            "enable": true,
+                            "mode": "push"
+                        },
+                        "resize": true
+                    },
+                    "modes": {
+                        "grab": {
+                            "distance": 140,
+                            "line_linked": {
+                                "opacity": 1
+                            }
+                        },
+                        "bubble": {
+                            "distance": 400,
+                            "size": 40,
+                            "duration": 2,
+                            "opacity": 8,
+                            "speed": 3
+                        },
+                        "repulse": {
+                            "distance": 200,
+                            "duration": 0.4
+                        },
+                        "push": {
+                            "particles_nb": 4
+                        },
+                        "remove": {
+                            "particles_nb": 2
+                        }
+                    }
+                },
+                "retina_detect": true
+            });
+
+            // Load logo from localStorage if available
+            const savedLogo = localStorage.getItem('silencesmp_logo');
+            if (savedLogo) {
+                document.getElementById('main-logo').src = savedLogo;
+            }
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Background changer function
+        function changeBackground(sectionId, button) {
+            const section = document.getElementById(sectionId);
+            const bgImage = button.style.backgroundImage;
+            section.style.backgroundImage = bgImage;
+            
+            // Highlight the active button
+            document.querySelectorAll('.bg-btn').forEach(btn => {
+                btn.style.borderColor = '#fff';
+                btn.style.boxShadow = 'none';
+            });
+            button.style.borderColor = '#4a4aff';
+            button.style.boxShadow = '0 0 10px rgba(74, 74, 255, 0.8)';
+        }
+
+        // Logo upload functionality
+        function uploadLogo() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            
+            input.onchange = e => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = event => {
+                        const logo = document.getElementById('main-logo');
+                        logo.src = event.target.result;
+                        // Save to localStorage
+                        localStorage.setItem('silencesmp_logo', event.target.result);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+            
+            input.click();
+        }
+
+        // Add click event to logo for uploading new one
+        document.getElementById('main-logo').addEventListener('click', uploadLogo);
+    </script>
+</body>
+</html>

@@ -5,24 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SilenceSMP - Server Minecraft Indonesia</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         /* Base Styles */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Minecraft', Arial, sans-serif;
-        }
-
-        @font-face {
-            font-family: 'Minecraft';
-            src: url('https://fonts.cdnfonts.com/css/minecraft-4') format('woff2');
+            font-family: 'Press Start 2P', cursive;
         }
 
         body {
             color: #fff;
             overflow-x: hidden;
             background-color: #0a0a12;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        /* Pixel Art Elements */
+        .pixel-box {
+            border-style: solid;
+            border-width: 4px;
+            border-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAABDklEQVR4nO2WMUoDQRSGv00I2MJF0tnaWlhYW1hYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFj4X3gD2h4QpQ2Q7XQAAAAASUVORK5CYII=') 4 stretch;
+            border-image-outset: 2px;
+            image-rendering: pixelated;
         }
 
         /* Particle Background */
@@ -36,49 +43,23 @@
             background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
         }
 
-        /* Background Changer Controls */
-        .bg-controls {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1000;
-            display: flex;
-            gap: 10px;
-        }
-
-        .bg-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: 2px solid #fff;
-            cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
-            background-size: cover;
-            background-position: center;
-        }
-
-        .bg-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 10px rgba(74, 74, 255, 0.8);
-        }
-
         /* Header Styles */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 5%;
-            background-color: rgba(10, 10, 18, 0.8);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(5px);
+            padding: 15px 5%;
+            background-color: rgba(10, 10, 18, 0.9);
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.5);
             position: relative;
             z-index: 10;
-            animation: fadeInDown 1s ease-out;
+            border-bottom: 3px solid #4a4aff;
         }
 
         .logo img {
-            height: 80px;
+            height: 70px;
             transition: transform 0.3s ease;
+            image-rendering: pixelated;
         }
 
         .logo img:hover {
@@ -86,71 +67,66 @@
         }
 
         .server-info {
-            background-color: rgba(0, 0, 0, 0.6);
-            padding: 10px 20px;
-            border-radius: 8px;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 10px 15px;
+            border-radius: 5px;
             border: 2px solid #4a4aff;
-            box-shadow: 0 0 15px rgba(74, 74, 255, 0.5);
+            box-shadow: 0 4px 0 rgba(74, 74, 255, 0.3);
+            text-align: center;
         }
 
         .server-info p {
             margin: 5px 0;
-            font-size: 1.1rem;
+            font-size: 0.8rem;
+            text-shadow: 2px 2px 0 #000;
         }
 
         /* Navigation Styles */
         nav {
-            background-color: rgba(20, 20, 40, 0.9);
-            padding: 15px 0;
+            background-color: rgba(20, 20, 40, 0.95);
+            padding: 12px 0;
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.4);
-            animation: slideInDown 0.8s ease-out;
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.4);
+            border-bottom: 2px solid #4a4aff;
         }
 
         nav ul {
             display: flex;
             justify-content: center;
             list-style: none;
-            gap: 30px;
+            gap: 15px;
+            flex-wrap: wrap;
         }
 
         nav a {
             color: #fff;
             text-decoration: none;
-            font-size: 1.1rem;
+            font-size: 0.9rem;
             padding: 8px 15px;
             border-radius: 5px;
             transition: all 0.3s ease;
             position: relative;
             display: inline-block;
-        }
-
-        nav a::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: 0;
-            left: 0;
-            background-color: #4a4aff;
-            transition: width 0.3s ease;
+            text-shadow: 2px 2px 0 #000;
         }
 
         nav a:hover {
             color: #4a4aff;
-            background-color: rgba(74, 74, 255, 0.1);
+            background-color: rgba(74, 74, 255, 0.2);
+            transform: translateY(-2px);
         }
 
-        nav a:hover::after {
-            width: 100%;
+        nav a.active {
+            background-color: rgba(74, 74, 255, 0.3);
+            box-shadow: 0 4px 0 rgba(74, 74, 255, 0.5);
         }
 
         /* Section Styles */
         section {
             min-height: 100vh;
-            padding: 80px 10%;
+            padding: 60px 10%;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -160,7 +136,7 @@
             overflow: hidden;
             background-size: cover;
             background-position: center;
-            transition: background-image 0.5s ease;
+            background-attachment: fixed;
         }
 
         section::before {
@@ -170,131 +146,84 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle, rgba(74, 74, 255, 0.1) 0%, rgba(10, 10, 18, 0.8) 70%);
+            background: rgba(10, 10, 18, 0.7);
             z-index: -1;
         }
 
         section h1, section h2 {
-            font-size: 3rem;
+            font-size: 1.8rem;
             margin-bottom: 20px;
-            text-shadow: 0 0 10px rgba(74, 74, 255, 0.7);
-            animation: fadeInUp 1s ease-out;
+            text-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5);
+            color: #4a4aff;
         }
 
         section p {
-            font-size: 1.2rem;
+            font-size: 0.9rem;
             max-width: 800px;
             margin-bottom: 30px;
-            line-height: 1.6;
-            animation: fadeInUp 1s ease-out 0.2s forwards;
-            opacity: 0;
+            text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
         }
 
         /* Button Styles */
         .btn {
             display: inline-block;
-            padding: 12px 30px;
+            padding: 12px 25px;
             background: linear-gradient(45deg, #4a4aff, #6a6aff);
             color: white;
             text-decoration: none;
-            border-radius: 50px;
-            font-weight: bold;
-            font-size: 1.1rem;
+            border-radius: 5px;
+            font-size: 0.9rem;
             border: none;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(74, 74, 255, 0.4);
+            box-shadow: 0 4px 0 rgba(74, 74, 255, 0.4);
             position: relative;
             overflow: hidden;
-            animation: fadeInUp 1s ease-out 0.4s forwards;
-            opacity: 0;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(255, 255, 255, 0.2);
         }
 
         .btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(74, 74, 255, 0.6);
+            box-shadow: 0 6px 0 rgba(74, 74, 255, 0.6);
             background: linear-gradient(45deg, #6a6aff, #4a4aff);
         }
 
         .btn:active {
-            transform: translateY(1px);
-        }
-
-        .btn::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transform: translateX(-100%);
-            transition: transform 0.6s ease;
-        }
-
-        .btn:hover::after {
-            transform: translateX(100%);
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 rgba(74, 74, 255, 0.6);
         }
 
         /* Home Section */
         #home {
-            background-image: url('');
+            background-image: url('https://i.imgur.com/5Kr67Qb.png');
         }
 
         /* Discord Section */
         #discord {
-            background-image: url('https://imgur.com/A7EIeJm.png');
+            background-image: url('https://i.imgur.com/A7EIeJm.png');
         }
 
         /* Store Section */
         #store {
-            background-image: url('https://imgur.com/4DHNThF.png');
+            background-image: url('https://i.imgur.com/4DHNThF.png');
         }
 
         /* WhatsApp Section */
         #whatsapp {
-            background-image: url('https://imgur.com/MgFB7vI.png');
+            background-image: url('https://i.imgur.com/MgFB7vI.png');
         }
 
         /* Footer Styles */
         footer {
-            background-color: rgba(10, 10, 18, 0.9);
+            background-color: rgba(10, 10, 18, 0.95);
             padding: 20px 0;
             text-align: center;
-            font-size: 1rem;
-            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes slideInDown {
-            from {
-                transform: translateY(-100%);
-            }
-            to {
-                transform: translateY(0);
-            }
+            font-size: 0.7rem;
+            box-shadow: 0 -4px 0 rgba(0, 0, 0, 0.3);
+            border-top: 2px solid #4a4aff;
+            text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
         }
 
         /* Floating Animation */
@@ -304,8 +233,41 @@
 
         @keyframes floating {
             0% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
+            50% { transform: translateY(-10px); }
             100% { transform: translateY(0px); }
+        }
+
+        /* Background Changer Controls */
+        .bg-controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .bg-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 5px;
+            border: 2px solid #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .bg-btn:hover {
+            transform: scale(1.1);
+            border-color: #4a4aff;
+        }
+
+        .bg-btn.active {
+            border-color: #4a4aff;
+            box-shadow: 0 0 10px rgba(74, 74, 255, 0.8);
         }
 
         /* Responsive Design */
@@ -313,19 +275,33 @@
             header {
                 flex-direction: column;
                 gap: 15px;
+                padding: 15px;
             }
 
             nav ul {
-                gap: 10px;
-                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            nav a {
+                padding: 6px 10px;
+                font-size: 0.7rem;
+            }
+
+            section {
+                padding: 40px 5%;
             }
 
             section h1, section h2 {
-                font-size: 2rem;
+                font-size: 1.4rem;
             }
 
             section p {
-                font-size: 1rem;
+                font-size: 0.8rem;
+            }
+
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.8rem;
             }
 
             .bg-controls {
@@ -346,65 +322,73 @@
 
     <!-- Background Changer Controls -->
     <div class="bg-controls">
-        <div class="bg-btn" style="background-image: url('https://imgur.com/5Kr67Qb.png')" onclick="changeBackground('home', this)"></div>
-        <div class="bg-btn" style="background-image: url('https://i.imgur.com/8Q3QZ9a.jpg')" onclick="changeBackground('discord', this)"></div>
-        <div class="bg-btn" style="background-image: url('https://i.imgur.com/9Q3QZ9a.jpg')" onclick="changeBackground('store', this)"></div>
-        <div class="bg-btn" style="background-image: url('https://i.imgur.com/7Q3QZ9a.jpg')" onclick="changeBackground('whatsapp', this)"></div>
+        <div class="bg-btn active" style="background-image: url('https://i.imgur.com/5Kr67Qb.png')" onclick="changeBackground('home', this)"></div>
+        <div class="bg-btn" style="background-image: url('https://i.imgur.com/A7EIeJm.png')" onclick="changeBackground('discord', this)"></div>
+        <div class="bg-btn" style="background-image: url('https://i.imgur.com/4DHNThF.png')" onclick="changeBackground('store', this)"></div>
+        <div class="bg-btn" style="background-image: url('https://i.imgur.com/MgFB7vI.png')" onclick="changeBackground('whatsapp', this)"></div>
     </div>
 
     <!-- Header Section with Logo and IP Info -->
     <header>
         <div class="logo floating">
-            <img src="https://imgur.com/dWD5KGQ.png" alt="SilenceSMP Logo" id="main-logo">
+            <img src="https://i.imgur.com/dWD5KGQ.png" alt="SilenceSMP Logo" id="main-logo">
         </div>
-        <div class="server-info">
-            <p><i class="fas fa-server"></i> IP Server: <span id="server-ip">silencesmp.styes.net</span></p>
-            <p><i class="fas fa-plug"></i> Port: <span id="server-port">19133</span></p>
+        <div class="server-info pixel-box">
+            <p><i class="fas fa-server"></i> IP: silencesmp.styes.net</p>
+            <p><i class="fas fa-plug"></i> Port: 19131</p>
         </div>
     </header>
 
     <!-- Navigation Bar -->
     <nav>
         <ul>
-            <li><a href="#home"><i class="fas fa-home"></i> Beranda</a></li>
+            <li><a href="#home" class="active"><i class="fas fa-home"></i> Beranda</a></li>
             <li><a href="#discord"><i class="fab fa-discord"></i> Discord</a></li>
             <li><a href="#store"><i class="fas fa-shopping-cart"></i> Toko</a></li>
             <li><a href="#whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</a></li>
         </ul>
     </nav>
 
-    <!-- Main Section -->
+    <!-- Main Sections -->
     <section id="home">
-        <h1>Selamat datang di SilenceSMP</h1>
-        <p>Server Minecraft terbaik dengan fitur Economy dengan petualangan seru kamu pada hari ini.</p>
-        <a href="https://chat.whatsapp.com/GUUHKDG4o7SB9EpJPfR09m" class="btn"><i class="fas fa-users"></i> Gabung Sekarang</a>
+        <h1>SELAMAT DATANG DI SILENCESMP</h1>
+        <p>Server Minecraft terbaik dengan fitur economy dan petualangan seru untuk pengalaman bermain yang tak terlupakan!</p>
+        <a href="https://chat.whatsapp.com/GUUHKDG4o7SB9EpJPfR09m" class="btn"><i class="fas fa-users"></i> GABUNG SEKARANG</a>
     </section>
 
-    <!-- Discord Section -->
     <section id="discord">
-        <h2>Gabung dengan Kami di Discord</h2>
-        <p>Temukan teman baru, dapatkan informasi terbaru tentang server, dan ikuti event seru bersama komunitas kami di Discord!</p>
-        <a href="https://discord.gg/KCHaaaj3D9" target="_blank" class="btn"><i class="fab fa-discord"></i> Gabung di Discord</a>
+        <h2>KOMUNITAS DISCORD</h2>
+        <p>Temukan teman baru, dapatkan informasi terbaru, dan ikuti event seru bersama komunitas kami di Discord!</p>
+        <a href="https://discord.gg/KCHaaaj3D9" target="_blank" class="btn"><i class="fab fa-discord"></i> GABUNG DISCORD</a>
     </section>
 
-    <!-- Store Section -->
     <section id="store">
-        <h2>TopUp Server</h2>
-        <p>Kunjungi toko kami untuk berbagai item eksklusif, rank, dan keperluan dalam game lainnya yang akan membuat kalian menjadi yang terkuat</p>
-        <a href="wa.me/85720103106text= mo beli rank bg" target="_blank" class="btn"><i class="fas fa-gem"></i> Kunjungi Toko</a>
+        <h2>TOKO SILENCESMP</h2>
+        <p>Dapatkan rank eksklusif, item spesial, dan berbagai keuntungan lainnya untuk meningkatkan pengalaman bermainmu!</p>
+        <a href="#" class="btn" onclick="showStoreModal()"><i class="fas fa-gem"></i> BELI SEKARANG</a>
     </section>
 
-    <!-- WhatsApp Section -->
     <section id="whatsapp">
-        <h2>Join Grub whatsaap</h2>
-        <p>Ikuti Grub Whatsapp Server untuk mengobrol dengan member lain disana:D</p>
-        <a href="https://chat.whatsapp.com/GUUHKDG4o7SB9EpJPfR09m" target="_blank" class="btn"><i class="fab fa-whatsapp"></i> Chat di WhatsApp</a>
+        <h2>GRUB WHATSAPP</h2>
+        <p>Bergabunglah dengan komunitas WhatsApp kami untuk berinteraksi langsung dengan member lainnya!</p>
+        <a href="https://chat.whatsapp.com/GUUHKDG4o7SB9EpJPfR09m" target="_blank" class="btn"><i class="fab fa-whatsapp"></i> GABUNG GRUB</a>
     </section>
 
     <!-- Footer -->
-    <footer>
-        <p>&copy; 2023 SilenceSMP - Semua hak cipta dilindungi</p>
+    <footer class="pixel-box">
+        <p>&copy; 2023 SILENCESMP - MINECRAFT SERVER INDONESIA</p>
     </footer>
+
+    <!-- Store Modal -->
+    <div id="storeModal" class="modal">
+        <div class="modal-content pixel-box">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>TOKO SILENCESMP</h2>
+            <div class="store-items">
+                <!-- Store items will be loaded here -->
+            </div>
+        </div>
+    </div>
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
@@ -414,7 +398,7 @@
             particlesJS('particles-js', {
                 "particles": {
                     "number": {
-                        "value": 80,
+                        "value": 60,
                         "density": {
                             "enable": true,
                             "value_area": 800
@@ -428,30 +412,15 @@
                         "stroke": {
                             "width": 0,
                             "color": "#000000"
-                        },
-                        "polygon": {
-                            "nb_sides": 5
                         }
                     },
                     "opacity": {
                         "value": 0.5,
-                        "random": false,
-                        "anim": {
-                            "enable": false,
-                            "speed": 1,
-                            "opacity_min": 0.1,
-                            "sync": false
-                        }
+                        "random": true,
                     },
                     "size": {
                         "value": 3,
                         "random": true,
-                        "anim": {
-                            "enable": false,
-                            "speed": 40,
-                            "size_min": 0.1,
-                            "sync": false
-                        }
                     },
                     "line_linked": {
                         "enable": true,
@@ -468,11 +437,6 @@
                         "straight": false,
                         "out_mode": "out",
                         "bounce": false,
-                        "attract": {
-                            "enable": false,
-                            "rotateX": 600,
-                            "rotateY": 1200
-                        }
                     }
                 },
                 "interactivity": {
@@ -495,33 +459,35 @@
                                 "opacity": 1
                             }
                         },
-                        "bubble": {
-                            "distance": 400,
-                            "size": 40,
-                            "duration": 2,
-                            "opacity": 8,
-                            "speed": 3
-                        },
-                        "repulse": {
-                            "distance": 200,
-                            "duration": 0.4
-                        },
                         "push": {
                             "particles_nb": 4
-                        },
-                        "remove": {
-                            "particles_nb": 2
                         }
                     }
                 },
                 "retina_detect": true
             });
 
-            // Load logo from localStorage if available
-            const savedLogo = localStorage.getItem('silencesmp_logo');
-            if (savedLogo) {
-                document.getElementById('main-logo').src = savedLogo;
-            }
+            // Set active nav link based on scroll position
+            window.addEventListener('scroll', function() {
+                const sections = document.querySelectorAll('section');
+                const navLinks = document.querySelectorAll('nav a');
+                
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    if (pageYOffset >= (sectionTop - sectionHeight/3)) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${current}`) {
+                        link.classList.add('active');
+                    }
+                });
+            });
         });
 
         // Smooth scrolling for anchor links
@@ -542,38 +508,63 @@
             
             // Highlight the active button
             document.querySelectorAll('.bg-btn').forEach(btn => {
-                btn.style.borderColor = '#fff';
-                btn.style.boxShadow = 'none';
+                btn.classList.remove('active');
             });
-            button.style.borderColor = '#4a4aff';
-            button.style.boxShadow = '0 0 10px rgba(74, 74, 255, 0.8)';
+            button.classList.add('active');
+            
+            // Scroll to the section
+            document.querySelector(`#${sectionId}`).scrollIntoView({
+                behavior: 'smooth'
+            });
         }
 
-        // Logo upload functionality
-        function uploadLogo() {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'image/*';
+        // Store modal functions
+        function showStoreModal() {
+            const modal = document.getElementById('storeModal');
+            modal.style.display = "block";
             
-            input.onchange = e => {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = event => {
-                        const logo = document.getElementById('main-logo');
-                        logo.src = event.target.result;
-                        // Save to localStorage
-                        localStorage.setItem('silencesmp_logo', event.target.result);
-                    };
-                    reader.readAsDataURL(file);
-                }
-            };
+            // Load store items (simulated)
+            const storeItems = [
+                { name: "VIP", price: "Rp 5.000", desc: "Rank dasar dengan beberapa keuntungan" },
+                { name: "MVP", price: "Rp 10.000", desc: "Akses ke command tambahan" },
+                { name: "MVP+", price: "Rp 20.000", desc: "Lebih banyak fitur eksklusif" },
+                { name: "Superme", price: "Rp 35.000", desc: "Rank tertinggi dengan semua fitur" },
+                { name: "Diamond Kit", price: "Rp 20.000", desc: "Perlengkapan diamond lengkap" },
+                { name: "Netherite Kit", price: "Rp 35.000", desc: "Perlengkapan netherite lengkap" }
+            ];
             
-            input.click();
+            let itemsHTML = '';
+            storeItems.forEach(item => {
+                itemsHTML += `
+                    <div class="store-item pixel-box">
+                        <h3>${item.name}</h3>
+                        <p class="price">${item.price}</p>
+                        <p class="desc">${item.desc}</p>
+                        <button class="btn" onclick="buyItem('${item.name}')">BELI</button>
+                    </div>
+                `;
+            });
+            
+            document.querySelector('.store-items').innerHTML = itemsHTML;
         }
 
-        // Add click event to logo for uploading new one
-        document.getElementById('main-logo').addEventListener('click', uploadLogo);
+        function closeModal() {
+            document.getElementById('storeModal').style.display = "none";
+        }
+
+        function buyItem(itemName) {
+            alert(`Anda akan membeli ${itemName}. Silakan lanjutkan pembayaran via WhatsApp.`);
+            closeModal();
+            window.location.href = "https://wa.me/6285720103106?text=Saya%20ingin%20membeli%20" + encodeURIComponent(itemName);
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('storeModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
     </script>
 </body>
-</html>
+            </html>

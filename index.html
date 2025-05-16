@@ -1,775 +1,570 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>TopUP SilenceSMP</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      color: white;
-      min-height: 100vh;
-      position: relative;
-      padding-bottom: 60px;
-      overflow-x: hidden;
-    }
-
-    /* Blackhole Background Animation */
-    .blackhole-bg {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -2;
-      background: radial-gradient(circle at center, #000000 0%, #0a0a1a 70%, #1a1a2e 100%);
-      overflow: hidden;
-    }
-
-    .blackhole {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 300px;
-      height: 300px;
-      background: radial-gradient(circle at center, #000000 0%, transparent 70%);
-      border-radius: 50%;
-      box-shadow: 0 0 100px rgba(0, 173, 181, 0.3);
-      transform: translate(-50%, -50%);
-      animation: blackholePulse 8s infinite alternate;
-    }
-
-    @keyframes blackholePulse {
-      0% { box-shadow: 0 0 80px rgba(0, 173, 181, 0.3); }
-      50% { box-shadow: 0 0 120px rgba(0, 173, 181, 0.5); }
-      100% { box-shadow: 0 0 80px rgba(0, 173, 181, 0.3); }
-    }
-
-    .accretion-disk {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 500px;
-      height: 100px;
-      background: transparent;
-      border-radius: 50%;
-      border: 2px solid rgba(0, 173, 181, 0.1);
-      transform: translate(-50%, -50%) rotateX(80deg);
-      animation: diskRotate 60s linear infinite;
-    }
-
-    .accretion-disk::before,
-    .accretion-disk::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 600px;
-      height: 150px;
-      border-radius: 50%;
-      border: 2px solid rgba(0, 173, 181, 0.08);
-      transform: translate(-50%, -50%) rotateX(80deg);
-    }
-
-    .accretion-disk::after {
-      width: 700px;
-      height: 200px;
-      border: 2px solid rgba(0, 173, 181, 0.05);
-    }
-
-    @keyframes diskRotate {
-      0% { transform: translate(-50%, -50%) rotateX(80deg) rotateZ(0deg); }
-      100% { transform: translate(-50%, -50%) rotateX(80deg) rotateZ(360deg); }
-    }
-
-    .particles {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      overflow: hidden;
-    }
-
-    .particle {
-      position: absolute;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 50%;
-      animation: float linear infinite;
-    }
-
-    @keyframes float {
-      0% {
-        transform: translate(0, 0) rotate(0deg);
-        opacity: 1;
-      }
-      100% {
-        transform: translate(var(--tx), var(--ty)) rotate(720deg);
-        opacity: 0;
-      }
-    }
-
-    /* Username with Minecraft Head */
-    .username-container {
-      position: relative;
-      margin-bottom: 10px;
-    }
-
-    .minecraft-head {
-      position: absolute;
-      left: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 32px;
-      height: 32px;
-      background-size: cover;
-      border-radius: 50%;
-      border: 2px solid rgba(255, 255, 255, 0.2);
-      box-shadow: 0 0 10px rgba(0, 173, 181, 0.3);
-    }
-
-    #username {
-      padding-left: 50px !important;
-    }
-
-    /* Minecraft Edition Selector */
-    .edition-selector {
-      margin-bottom: 20px;
-      display: flex;
-      gap: 10px;
-    }
-
-    .edition-option {
-      flex: 1;
-      padding: 10px;
-      text-align: center;
-      border-radius: 5px;
-      background: rgba(255, 255, 255, 0.1);
-      cursor: pointer;
-      transition: all 0.3s ease;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .edition-option:hover {
-      background: rgba(255, 255, 255, 0.2);
-      transform: translateY(-2px);
-    }
-
-    .edition-option.selected {
-      background: rgba(0, 173, 181, 0.3);
-      border-color: rgba(0, 173, 181, 0.5);
-      box-shadow: 0 0 10px rgba(0, 173, 181, 0.3);
-    }
-
-    .edition-icon {
-      width: 24px;
-      height: 24px;
-      margin-bottom: 5px;
-      display: inline-block;
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center;
-      image-rendering: pixelated;
-    }
-
-    /* WhatsApp Number Selector */
-    .whatsapp-selector {
-      position: fixed;
-      bottom: 80px;
-      left: 20px;
-      background: rgba(0, 0, 0, 0.5);
-      padding: 10px;
-      border-radius: 5px;
-      backdrop-filter: blur(5px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      z-index: 100;
-      max-width: 200px;
-    }
-
-    .whatsapp-selector-title {
-      font-size: 12px;
-      margin-bottom: 5px;
-      opacity: 0.8;
-    }
-
-    .whatsapp-option {
-      padding: 6px 8px;
-      margin: 3px 0;
-      border-radius: 3px;
-      cursor: pointer;
-      transition: all 0.2s;
-      font-size: 12px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .whatsapp-option:hover {
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    .whatsapp-option.selected {
-      background: rgba(0, 173, 181, 0.3);
-    }
-
-    header {
-      background-color: rgba(0, 0, 0, 0.5);
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      backdrop-filter: blur(5px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    header img {
-      max-height: 60px;
-      filter: drop-shadow(0 0 10px rgba(0, 173, 181, 0.7));
-    }
-
-    #hero {
-      text-align: center;
-      padding: 100px 20px 40px;
-    }
-
-    form {
-      max-width: 400px;
-      margin: 0 auto;
-      background: rgba(0, 0, 0, 0.5);
-      padding: 25px;
-      border-radius: 10px;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    label {
-      display: block;
-      width: 100%;
-      margin-bottom: 15px;
-      color: white;
-      font-weight: bold;
-      text-shadow: 0 0 5px rgba(0, 173, 181, 0.5);
-    }
-
-    input {
-      padding: 12px 15px;
-      border: none;
-      border-radius: 5px;
-      background: rgba(255,255,255,0.1);
-      color: white;
-      width: 100%;
-      margin-bottom: 10px;
-      transition: all 0.3s ease;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    input:focus {
-      outline: none;
-      background: rgba(255,255,255,0.2);
-      box-shadow: 0 0 10px rgba(0, 173, 181, 0.5);
-    }
-
-    /* Enhanced Select Box Styling */
-    .select-container {
-      position: relative;
-      margin-bottom: 25px;
-    }
-
-    .select-container::after {
-      content: "▼";
-      font-size: 12px;
-      color: white;
-      position: absolute;
-      right: 15px;
-      top: 50%;
-      transform: translateY(-50%);
-      pointer-events: none;
-      text-shadow: 0 0 5px rgba(0, 173, 181, 0.5);
-    }
-
-    select {
-      width: 100%;
-      padding: 12px 15px;
-      border: none;
-      border-radius: 5px;
-      background: rgba(255,255,255,0.1);
-      color: white;
-      appearance: none;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    select:hover {
-      background: rgba(255,255,255,0.2);
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    }
-
-    select:focus {
-      outline: none;
-      background: rgba(255,255,255,0.2);
-      box-shadow: 0 0 10px rgba(0, 173, 181, 0.5);
-    }
-
-    /* Animated Options */
-    select option {
-      background: #1a1a2e;
-      color: white;
-      padding: 10px;
-      transition: all 0.2s;
-    }
-
-    select option:hover {
-      background: #00adb5 !important;
-    }
-
-    button {
-      background: linear-gradient(135deg, #00adb5 0%, #009ca4 100%);
-      padding: 15px;
-      border: none;
-      border-radius: 5px;
-      width: 100%;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(0, 173, 181, 0.4);
-      position: relative;
-      overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    button:hover {
-      background: linear-gradient(135deg, #009ca4 0%, #008b94 100%);
-      transform: translateY(-3px);
-      box-shadow: 0 7px 20px rgba(0, 173, 181, 0.6);
-    }
-
-    button:active {
-      transform: translateY(1px);
-    }
-
-    button::after {
-      content: "";
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 5px;
-      height: 5px;
-      background: rgba(255, 255, 255, 0.5);
-      opacity: 0;
-      border-radius: 100%;
-      transform: scale(1, 1) translate(-50%);
-      transform-origin: 50% 50%;
-    }
-
-    button:focus:not(:active)::after {
-      animation: ripple 1s ease-out;
-    }
-
-    @keyframes ripple {
-      0% {
-        transform: scale(0, 0);
-        opacity: 0.5;
-      }
-      100% {
-        transform: scale(20, 20);
-        opacity: 0;
-      }
-    }
-
-    footer {
-      text-align: center;
-      padding: 20px;
-      background-color: rgba(0, 0, 0, 0.5);
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      backdrop-filter: blur(5px);
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .alert {
-      text-align: center;
-      margin-top: 20px;
-      font-weight: bold;
-      text-shadow: 0 0 5px rgba(0, 173, 181, 0.5);
-    }
-
-    .warning-text {
-      color: #ff6b6b;
-      font-weight: bold;
-      text-align: center;
-      margin-bottom: 20px;
-      font-size: 14px;
-      animation: pulseText 2s infinite;
-      text-shadow: 0 0 5px rgba(255, 107, 107, 0.5);
-    }
-
-    @keyframes pulseText {
-      0% { opacity: 0.8; }
-      50% { opacity: 1; }
-      100% { opacity: 0.8; }
-    }
-
-    /* Modal Confirmation Styles */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.7);
-      z-index: 1000;
-      justify-content: center;
-      align-items: center;
-      animation: fadeIn 0.3s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    .modal-content {
-      background: linear-gradient(135deg, rgba(26, 26, 46, 0.9) 0%, rgba(22, 33, 62, 0.9) 100%);
-      padding: 25px;
-      border-radius: 10px;
-      width: 90%;
-      max-width: 400px;
-      text-align: center;
-      box-shadow: 0 5px 30px rgba(0, 0, 0, 0.7);
-      transform: scale(0.9);
-      animation: scaleUp 0.3s ease forwards;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-    }
-
-    @keyframes scaleUp {
-      to { transform: scale(1); }
-    }
-
-    .modal-title {
-      font-size: 20px;
-      margin-bottom: 20px;
-      color: #ff6b6b;
-      text-shadow: 0 0 5px rgba(255, 107, 107, 0.5);
-    }
-
-    .modal-message {
-      margin-bottom: 25px;
-      line-height: 1.5;
-      text-shadow: 0 0 5px rgba(0, 173, 181, 0.5);
-    }
-
-    .modal-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-    }
-
-    .modal-btn {
-      padding: 12px 25px;
-      border: none;
-      border-radius: 5px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    }
-
-    .modal-btn-confirm {
-      background: linear-gradient(135deg, #00adb5 0%, #009ca4 100%);
-      color: white;
-    }
-
-    .modal-btn-confirm:hover {
-      background: linear-gradient(135deg, #009ca4 0%, #008b94 100%);
-      transform: translateY(-3px);
-      box-shadow: 0 7px 20px rgba(0, 173, 181, 0.6);
-    }
-
-    .modal-btn-cancel {
-      background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
-      color: white;
-    }
-
-    .modal-btn-cancel:hover {
-      background: linear-gradient(135deg, #ff5252 0%, #ff3939 100%);
-      transform: translateY(-3px);
-      box-shadow: 0 7px 20px rgba(255, 107, 107, 0.6);
-    }
-
-    .pulse {
-      animation: pulse 1.5s infinite;
-    }
-
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-      100% { transform: scale(1); }
-    }
-
-    /* Glow effect for selected options */
-    .select-highlight {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border-radius: 5px;
-      box-shadow: 0 0 10px rgba(0, 173, 181, 0.7);
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      pointer-events: none;
-    }
-
-    select:focus + .select-highlight {
-      opacity: 1;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SilenceSMP - Server Minecraft Indonesia</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        body {
+            color: #fff;
+            overflow-x: hidden;
+            background-color: #0a0a12;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        /* Pixel Art Elements */
+        .pixel-box {
+            border-style: solid;
+            border-width: 4px;
+            border-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAABDklEQVR4nO2WMUoDQRSGv00I2MJF0tnaWlhYW1hYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFj4X3gD2h4QpQ2Q7XQAAAAASUVORK5CYII=') 4 stretch;
+            border-image-outset: 2px;
+            image-rendering: pixelated;
+        }
+
+        /* Particle Background */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+        }
+
+        /* Header Styles */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            background-color: rgba(10, 10, 18, 0.9);
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.5);
+            position: relative;
+            z-index: 10;
+            border-bottom: 3px solid #4a4aff;
+        }
+
+        .logo img {
+            height: 70px;
+            transition: transform 0.3s ease;
+            image-rendering: pixelated;
+        }
+
+        .logo img:hover {
+            transform: scale(1.1);
+        }
+
+        .server-info {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 10px 15px;
+            border-radius: 5px;
+            border: 2px solid #4a4aff;
+            box-shadow: 0 4px 0 rgba(74, 74, 255, 0.3);
+            text-align: center;
+        }
+
+        .server-info p {
+            margin: 5px 0;
+            font-size: 0.8rem;
+            text-shadow: 2px 2px 0 #000;
+        }
+
+        /* Navigation Styles */
+        nav {
+            background-color: rgba(20, 20, 40, 0.95);
+            padding: 12px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.4);
+            border-bottom: 2px solid #4a4aff;
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            position: relative;
+            display: inline-block;
+            text-shadow: 2px 2px 0 #000;
+        }
+
+        nav a:hover {
+            color: #4a4aff;
+            background-color: rgba(74, 74, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        nav a.active {
+            background-color: rgba(74, 74, 255, 0.3);
+            box-shadow: 0 4px 0 rgba(74, 74, 255, 0.5);
+        }
+
+        /* Section Styles */
+        section {
+            min-height: 100vh;
+            padding: 60px 10%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 18, 0.7);
+            z-index: -1;
+        }
+
+        section h1, section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            text-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5);
+            color: #4a4aff;
+        }
+
+        section p {
+            font-size: 0.9rem;
+            max-width: 800px;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            background: linear-gradient(45deg, #4a4aff, #6a6aff);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 0 rgba(74, 74, 255, 0.4);
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 0 rgba(74, 74, 255, 0.6);
+            background: linear-gradient(45deg, #6a6aff, #4a4aff);
+        }
+
+        .btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 rgba(74, 74, 255, 0.6);
+        }
+
+        /* Home Section */
+        #home {
+            background-image: url('https://i.imgur.com/5Kr67Qb.png');
+        }
+
+        /* Discord Section */
+        #discord {
+            background-image: url('https://i.imgur.com/A7EIeJm.png');
+        }
+
+        /* Store Section */
+        #store {
+            background-image: url('https://i.imgur.com/4DHNThF.png');
+        }
+
+        /* WhatsApp Section */
+        #whatsapp {
+            background-image: url('https://i.imgur.com/MgFB7vI.png');
+        }
+
+        /* Footer Styles */
+        footer {
+            background-color: rgba(10, 10, 18, 0.95);
+            padding: 20px 0;
+            text-align: center;
+            font-size: 0.7rem;
+            box-shadow: 0 -4px 0 rgba(0, 0, 0, 0.3);
+            border-top: 2px solid #4a4aff;
+            text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+        }
+
+        /* Floating Animation */
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* Background Changer Controls */
+        .bg-controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .bg-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 5px;
+            border: 2px solid #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .bg-btn:hover {
+            transform: scale(1.1);
+            border-color: #4a4aff;
+        }
+
+        .bg-btn.active {
+            border-color: #4a4aff;
+            box-shadow: 0 0 10px rgba(74, 74, 255, 0.8);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px;
+            }
+
+            nav ul {
+                gap: 8px;
+            }
+
+            nav a {
+                padding: 6px 10px;
+                font-size: 0.7rem;
+            }
+
+            section {
+                padding: 40px 5%;
+            }
+
+            section h1, section h2 {
+                font-size: 1.4rem;
+            }
+
+            section p {
+                font-size: 0.8rem;
+            }
+
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.8rem;
+            }
+
+            .bg-controls {
+                bottom: 10px;
+                right: 10px;
+            }
+            
+            .bg-btn {
+                width: 30px;
+                height: 30px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <!-- Blackhole Background -->
-  <div class="blackhole-bg">
-    <div class="blackhole"></div>
-    <div class="accretion-disk"></div>
-  </div>
+    <!-- Particle Background -->
+    <div id="particles-js"></div>
 
-  <div class="particles" id="particles"></div>
-
-  <!-- Confirmation Modal -->
-  <div id="confirmationModal" class="modal">
-    <div class="modal-content">
-      <div class="modal-title">⚠️ PERHATIAN</div>
-      <div class="modal-message">Apa kamu yakin?<br>Transaksi ini TIDAK BISA DIREFUND!</div>
-      <div class="modal-buttons">
-        <button id="confirmBtn" class="modal-btn modal-btn-confirm pulse">Ya, Lanjutkan</button>
-        <button id="cancelBtn" class="modal-btn modal-btn-cancel">Batal</button>
-      </div>
+    <!-- Background Changer Controls -->
+    <div class="bg-controls">
+        <div class="bg-btn active" style="background-image: url('https://i.imgur.com/5Kr67Qb.png')" onclick="changeBackground('home', this)"></div>
+        <div class="bg-btn" style="background-image: url('https://i.imgur.com/A7EIeJm.png')" onclick="changeBackground('discord', this)"></div>
+        <div class="bg-btn" style="background-image: url('https://i.imgur.com/4DHNThF.png')" onclick="changeBackground('store', this)"></div>
+        <div class="bg-btn" style="background-image: url('https://i.imgur.com/MgFB7vI.png')" onclick="changeBackground('whatsapp', this)"></div>
     </div>
-  </div>
 
-  <header>
-    <img src="logo.png" alt="TopUP SilenceSMP Logo">
-  </header>
-
-  <section id="hero">
-    <h2>Top Up Game SilenceSMP</h2>
-    <p class="warning-text">Transaksi ini no refund, jadi pikirkan dulu!</p>
-  </section>
-
-  <section id="topup-form">
-    <form id="formTopup">
-      <label for="username">Username Minecraft:</label>
-      <div class="username-container">
-        <div class="minecraft-head" id="playerHead"></div>
-        <input type="text" id="username" required placeholder="Masukkan username Minecraft">
-      </div>
-
-      <div class="edition-selector">
-        <div class="edition-option selected" data-edition="java">
-          <div class="edition-icon" style="background-image: url('https://www.minecraft.net/content/dam/minecraft/touchup-java/2020/game-icons/minecraft-block-icon.png');"></div>
-          <div>Java Edition</div>
+    <!-- Header Section with Logo and IP Info -->
+    <header>
+        <div class="logo floating">
+            <img src="https://i.imgur.com/dWD5KGQ.png" alt="SilenceSMP Logo" id="main-logo">
         </div>
-        <div class="edition-option" data-edition="bedrock">
-          <div class="edition-icon" style="background-image: url('https://www.minecraft.net/content/dam/minecraft/touchup-java/2020/game-icons/bedrock-block-icon.png');"></div>
-          <div>Bedrock Edition</div>
+        <div class="server-info pixel-box">
+            <p><i class="fas fa-server"></i> IP: silencesmp.styes.net</p>
+            <p><i class="fas fa-plug"></i> Port: 19131</p>
         </div>
-      </div>
-      <input type="hidden" id="edition" name="edition" value="java">
+    </header>
 
-      <label for="produk">Pilih Produk:</label>
-      <div class="select-container">
-        <select id="produk">
-          <option value="Rank S 2k">Rank S 2k</option>
-          <option value="Upgrade Rank 5k">Upgrade Rank 5k</option>
-          <option value="Netherite Kits 35k">Netherite Kits 35k</option>
-          <option value="Diamond Kits 25k">Diamond Kits 25k</option>
-          <option value="10000$ 5k">10000$ 5k</option>
-        </select>
-        <div class="select-highlight"></div>
-      </div>
+    <!-- Navigation Bar -->
+    <nav>
+        <ul>
+            <li><a href="#home" class="active"><i class="fas fa-home"></i> Beranda</a></li>
+            <li><a href="#discord"><i class="fab fa-discord"></i> Discord</a></li>
+            <li><a href="#store"><i class="fas fa-shopping-cart"></i> Toko</a></li>
+            <li><a href="#whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</a></li>
+        </ul>
+    </nav>
 
-      <label for="metode">Metode Pembayaran:</label>
-      <div class="select-container">
-        <select id="metode">
-          <option value="QRIS">QRIS</option>
-          <option value="Dana">Dana</option>
-          <option value="GoPay">GoPay</option>
-        </select>
-        <div class="select-highlight"></div>
-      </div>
+    <!-- Main Sections -->
+    <section id="home">
+        <h1>SELAMAT DATANG DI SILENCESMP</h1>
+        <p>Server Minecraft terbaik dengan fitur economy dan petualangan seru untuk pengalaman bermain yang tak terlupakan!</p>
+        <a href="https://chat.whatsapp.com/GUUHKDG4o7SB9EpJPfR09m" class="btn"><i class="fas fa-users"></i> GABUNG SEKARANG</a>
+    </section>
 
-      <button type="submit" id="submitBtn">Bayar Sekarang</button>
-    </form>
-    <div class="alert" id="hasilTransaksi"></div>
-  </section>
+    <section id="discord">
+        <h2>KOMUNITAS DISCORD</h2>
+        <p>Temukan teman baru, dapatkan informasi terbaru, dan ikuti event seru bersama komunitas kami di Discord!</p>
+        <a href="https://discord.gg/KCHaaaj3D9" target="_blank" class="btn"><i class="fab fa-discord"></i> GABUNG DISCORD</a>
+    </section>
 
-  <!-- WhatsApp Number Selector -->
-  <div class="whatsapp-selector">
-    <div class="whatsapp-selector-title">Pilih Admin:</div>
-    <div class="whatsapp-option selected" data-number="6285720103106" data-name="Rizky">
-      Rizky +62 85720103106
+    <section id="store">
+        <h2>TOKO SILENCESMP</h2>
+        <p>Dapatkan rank eksklusif, item spesial, dan berbagai keuntungan lainnya untuk meningkatkan pengalaman bermainmu!</p>
+        <a href="#" class="btn" onclick="showStoreModal()"><i class="fas fa-gem"></i> BELI SEKARANG</a>
+    </section>
+
+    <section id="whatsapp">
+        <h2>GRUB WHATSAPP</h2>
+        <p>Bergabunglah dengan komunitas WhatsApp kami untuk berinteraksi langsung dengan member lainnya!</p>
+        <a href="https://chat.whatsapp.com/GUUHKDG4o7SB9EpJPfR09m" target="_blank" class="btn"><i class="fab fa-whatsapp"></i> GABUNG GRUB</a>
+    </section>
+
+    <!-- Footer -->
+    <footer class="pixel-box">
+        <p>&copy; 2023 SILENCESMP - MINECRAFT SERVER INDONESIA</p>
+    </footer>
+
+    <!-- Store Modal -->
+    <div id="storeModal" class="modal">
+        <div class="modal-content pixel-box">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>TOKO SILENCESMP</h2>
+            <div class="store-items">
+                <!-- Store items will be loaded here -->
+            </div>
+        </div>
     </div>
-    <div class="whatsapp-option" data-number="6289507912442" data-name="Leazent">
-      Leazent +62 89507912442
-    </div>
-  </div>
 
-  <footer>
-    <p>&copy; 2025 TopUP SilenceSMP. All rights reserved.</p>
-  </footer>
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // Initialize particles.js
+        document.addEventListener('DOMContentLoaded', function() {
+            particlesJS('particles-js', {
+                "particles": {
+                    "number": {
+                        "value": 60,
+                        "density": {
+                            "enable": true,
+                            "value_area": 800
+                        }
+                    },
+                    "color": {
+                        "value": "#4a4aff"
+                    },
+                    "shape": {
+                        "type": "circle",
+                        "stroke": {
+                            "width": 0,
+                            "color": "#000000"
+                        }
+                    },
+                    "opacity": {
+                        "value": 0.5,
+                        "random": true,
+                    },
+                    "size": {
+                        "value": 3,
+                        "random": true,
+                    },
+                    "line_linked": {
+                        "enable": true,
+                        "distance": 150,
+                        "color": "#4a4aff",
+                        "opacity": 0.4,
+                        "width": 1
+                    },
+                    "move": {
+                        "enable": true,
+                        "speed": 2,
+                        "direction": "none",
+                        "random": false,
+                        "straight": false,
+                        "out_mode": "out",
+                        "bounce": false,
+                    }
+                },
+                "interactivity": {
+                    "detect_on": "canvas",
+                    "events": {
+                        "onhover": {
+                            "enable": true,
+                            "mode": "grab"
+                        },
+                        "onclick": {
+                            "enable": true,
+                            "mode": "push"
+                        },
+                        "resize": true
+                    },
+                    "modes": {
+                        "grab": {
+                            "distance": 140,
+                            "line_linked": {
+                                "opacity": 1
+                            }
+                        },
+                        "push": {
+                            "particles_nb": 4
+                        }
+                    }
+                },
+                "retina_detect": true
+            });
 
-  <script>
-    // Modal elements
-    const modal = document.getElementById('confirmationModal');
-    const confirmBtn = document.getElementById('confirmBtn');
-    const cancelBtn = document.getElementById('cancelBtn');
-    const form = document.getElementById('formTopup');
-    let formSubmitted = false;
-    let currentWhatsAppNumber = '6285720103106';
-    let currentAdminName = 'Rizky';
+            // Set active nav link based on scroll position
+            window.addEventListener('scroll', function() {
+                const sections = document.querySelectorAll('section');
+                const navLinks = document.querySelectorAll('nav a');
+                
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    if (pageYOffset >= (sectionTop - sectionHeight/3)) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${current}`) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        });
 
-    // Show modal when form is submitted
-    form.addEventListener('submit', function(e) {
-      e.preventDefault();
-      if (!formSubmitted) {
-        modal.style.display = 'flex';
-      }
-    });
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
 
-    // Confirm button handler
-    confirmBtn.addEventListener('click', function() {
-      formSubmitted = true;
-      modal.style.display = 'none';
-      
-      const username = document.getElementById('username').value;
-      const produk = document.getElementById('produk').value;
-      const metode = document.getElementById('metode').value;
-      const edition = document.getElementById('edition').value;
-      const hasil = `Terima kasih ${username} (${edition}), pembelian ${produk} via ${metode} sedang diproses oleh ${currentAdminName}!`;
-      document.getElementById('hasilTransaksi').textContent = hasil;
+        // Background changer function
+        function changeBackground(sectionId, button) {
+            const section = document.getElementById(sectionId);
+            const bgImage = button.style.backgroundImage;
+            section.style.backgroundImage = bgImage;
+            
+            // Highlight the active button
+            document.querySelectorAll('.bg-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            button.classList.add('active');
+            
+            // Scroll to the section
+            document.querySelector(`#${sectionId}`).scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
 
-      // Redirect to WhatsApp with personalized message
-      const message = `Halo min saya ${username} (${edition}) mau beli ${produk}`;
-      const whatsappUrl = `https://wa.me/${currentWhatsAppNumber}?text=${encodeURIComponent(message)}`;
-      window.location.href = whatsappUrl;
-    });
+        // Store modal functions
+        function showStoreModal() {
+            const modal = document.getElementById('storeModal');
+            modal.style.display = "block";
+            
+            // Load store items (simulated)
+            const storeItems = [
+                { name: "VIP", price: "Rp 5.000", desc: "Rank dasar dengan beberapa keuntungan" },
+                { name: "MVP", price: "Rp 10.000", desc: "Akses ke command tambahan" },
+                { name: "MVP+", price: "Rp 20.000", desc: "Lebih banyak fitur eksklusif" },
+                { name: "Superme", price: "Rp 35.000", desc: "Rank tertinggi dengan semua fitur" },
+                { name: "Diamond Kit", price: "Rp 20.000", desc: "Perlengkapan diamond lengkap" },
+                { name: "Netherite Kit", price: "Rp 35.000", desc: "Perlengkapan netherite lengkap" }
+            ];
+            
+            let itemsHTML = '';
+            storeItems.forEach(item => {
+                itemsHTML += `
+                    <div class="store-item pixel-box">
+                        <h3>${item.name}</h3>
+                        <p class="price">${item.price}</p>
+                        <p class="desc">${item.desc}</p>
+                        <button class="btn" onclick="buyItem('${item.name}')">BELI</button>
+                    </div>
+                `;
+            });
+            
+            document.querySelector('.store-items').innerHTML = itemsHTML;
+        }
 
-    // Cancel button handler
-    cancelBtn.addEventListener('click', function() {
-      modal.style.display = 'none';
-    });
+        function closeModal() {
+            document.getElementById('storeModal').style.display = "none";
+        }
 
-    // Close modal when clicking outside
-    window.addEventListener('click', function(e) {
-      if (e.target === modal) {
-        modal.style.display = 'none';
-      }
-    });
+        function buyItem(itemName) {
+            alert(`Anda akan membeli ${itemName}. Silakan lanjutkan pembayaran via WhatsApp.`);
+            closeModal();
+            window.location.href = "https://wa.me/6285720103106?text=Saya%20ingin%20membeli%20" + encodeURIComponent(itemName);
+        }
 
-    // Minecraft Edition Selection
-    const editionOptions = document.querySelectorAll('.edition-option');
-    editionOptions.forEach(option => {
-      option.addEventListener('click', function() {
-        editionOptions.forEach(opt => opt.classList.remove('selected'));
-        this.classList.add('selected');
-        document.getElementById('edition').value = this.dataset.edition;
-      });
-    });
-
-    // WhatsApp Number Selection
-    const whatsappOptions = document.querySelectorAll('.whatsapp-option');
-    whatsappOptions.forEach(option => {
-      option.addEventListener('click', function() {
-        whatsappOptions.forEach(opt => opt.classList.remove('selected'));
-        this.classList.add('selected');
-        currentWhatsAppNumber = this.dataset.number;
-        currentAdminName = this.dataset.name;
-      });
-    });
-
-    // Update Minecraft head when username changes
-    const usernameInput = document.getElementById('username');
-    const playerHead = document.getElementById('playerHead');
-    
-    usernameInput.addEventListener('input', function() {
-      if (this.value.trim() !== '') {
-        playerHead.style.backgroundImage = `url(https://mc-heads.net/avatar/${encodeURIComponent(this.value)}/32)`;
-      } else {
-        playerHead.style.backgroundImage = 'url(https://mc-heads.net/avatar/MHF_Steve/32)';
-      }
-    });
-
-    // Initialize with default Steve head
-    playerHead.style.backgroundImage = 'url(https://mc-heads.net/avatar/MHF_Steve/32)';
-
-    // Enhanced select box interactions
-    const selects = document.querySelectorAll('select');
-    selects.forEach(select => {
-      select.addEventListener('focus', function() {
-        this.parentElement.querySelector('.select-highlight').style.opacity = '1';
-      });
-      select.addEventListener('blur', function() {
-        this.parentElement.querySelector('.select-highlight').style.opacity = '0';
-      });
-      select.addEventListener('change', function() {
-        this.style.backgroundColor = 'rgba(0, 173, 181, 0.2)';
-        setTimeout(() => {
-          this.style.backgroundColor = 'rgba(255,255,255,0.1)';
-        }, 500);
-      });
-    });
-
-    // Create floating particles
-    function createParticles() {
-      const particlesContainer = document.getElementById('particles');
-      const particleCount = 50;
-      
-      for (let i = 0; i < particleCount; i++) {
-        const particle = document.createElement('div');
-        particle.classList.add('particle');
-        
-        // Random end position towards center (blackhole)
-        const angle = Math.random() * Math.PI * 2;
-        const distance = 50 + Math.random() * 100;
-        const tx = Math.cos(angle) * distance;
-        const ty = Math.sin(angle) * distance;
-        
-        particle.style.setProperty('--tx', `${tx}px`);
-        particle.style.setProperty('--ty', `${ty}px`);
-        
-        const size = Math.random() * 4 + 1;
-        particle.style.width = `${size}px`;
-        particle.style.height = `${size}px`;
-        particle.style.left = `${Math.random() * 100}%`;
-        particle.style.top = `${Math.random() * 100}%`;
-        particle.style.animationDuration = `${Math.random() * 10 + 5}s`;
-        particle.style.animationDelay = `${Math.random() * 5}s`;
-        
-        particlesContainer.appendChild(particle);
-      }
-    }
-
-    // Initialize effects when page loads
-    window.addEventListener('load', function() {
-      createParticles();
-    });
-  </script>
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('storeModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+    </script>
 </body>
-</html>
+  </html>
